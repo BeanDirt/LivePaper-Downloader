@@ -58,6 +58,7 @@ public class FlickrWebService {
 		case GET_FROB: return getFrob();
 		case GET_PHOTOSET_LIST: return getPhotosetList();
 		case GET_AUTH_TOKEN: return getAuthToken();
+		case GET_COLLECTION: return getCollection();
 		case GET_COLLECTION_LIST: return getCollectionList();
 		}
 		return null;
@@ -258,6 +259,10 @@ public class FlickrWebService {
 		return returnValue;
 	}
 	
+	private JSONObject getCollection(){
+		return new JSONObject();
+	}
+	
 	public JSONObject getCollectionList(){
 		
 		String method = "flickr.collections.getTree";
@@ -326,6 +331,6 @@ public class FlickrWebService {
 	}
 	
 	public enum PostMethod{
-		GET_FROB, GET_PHOTOSET_LIST, GET_PHOTOSET, GET_COLLECTION_LIST, GET_AUTH_TOKEN;
+		GET_FROB, GET_PHOTOSET_LIST, GET_PHOTOSET, GET_COLLECTION_LIST, GET_COLLECTION, GET_AUTH_TOKEN;
 	}
 }

@@ -21,7 +21,7 @@ import android.widget.TextView;
 
 import com.beandirt.livepaperdownloader.FlickrWebService.PostMethod;
 
-public class Collections extends ListActivity {
+public class NewCollections extends ListActivity {
 
 	@SuppressWarnings("unused")
 	private static final String TAG = "Collections"; 

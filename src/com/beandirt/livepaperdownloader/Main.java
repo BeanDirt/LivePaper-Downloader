@@ -7,33 +7,33 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.ListActivity;
-import android.content.Context;
+import com.beandirt.livepaperdownloader.FlickrWebService.PostMethod;
+
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
 
-import com.beandirt.livepaperdownloader.FlickrWebService.PostMethod;
-
-public class Collections extends ListActivity {
-
-	@SuppressWarnings("unused")
-	private static final String TAG = "Collections"; 
+public class Main extends Activity {
 	
+	private static final String TAG = "Main";
+
 	List<Collection> collections;
 	
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.photosets);
-		
-		AsyncTask<Object, Object, JSONObject> getCollections = new AsyncTask<Object, Object, JSONObject>() {
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.main);
+    }
+
+    private void checkForUpdates(){
+    	final ProgressDialog dialog = ProgressDialog.show(this, "", 
+                "Checking for updates...", true);
+        dialog.show();
+        
+        AsyncTask<Object, Object, JSONObject> getCollections = new AsyncTask<Object, Object, JSONObject>() {
 
     		@Override
     		protected JSONObject doInBackground(Object... params) {
@@ -65,9 +65,8 @@ public class Collections extends ListActivity {
 						}
 						
 						collections.add(new Collection(collectionId, collectionName, collectionSets));
+						dialog.hide();
 					}
-					
-					populateList();
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
@@ -77,32 +76,21 @@ public class Collections extends ListActivity {
     		}
     	};
     	getCollections.execute();
+    }
+    
+	@Override
+	protected void onResume() {
+		checkForUpdates();
+		super.onResume();
 	}
 	
-	@Override
-	protected void onListItemClick(ListView l, View v, int position, long id) {
-		Intent intent = new Intent(this,Downloader.class);
-		intent.putExtra("id", collections.get(position).getId());
+	public void gotoNewCollections(View v){
+		Intent intent = new Intent(this, NewCollections.class);
 		startActivity(intent);
-		super.onListItemClick(l, v, position, id);
 	}
-
-	private void populateList(){
-		setListAdapter(new ArrayAdapter<Collection>(this, R.layout.list_photoset_item, collections){
-			
-			@Override
-			public View getView(int position, View convertView, ViewGroup parent){
-				View v = convertView;
-				if(v == null){
-					LayoutInflater vi = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-					v = vi.inflate(R.layout.list_collection_item, null);
-				}
-				
-				Collection collection = collections.get(position);
-				TextView label = (TextView) v.findViewById(R.id.collection_name);
-				label.setText(collection.getName());
-				return v;
-			}
-		});
+	
+	public void gotoMyCollections(View v){
+		Intent intent = new Intent(this, MyCollections.class);
+		startActivity(intent);
 	}
 }
