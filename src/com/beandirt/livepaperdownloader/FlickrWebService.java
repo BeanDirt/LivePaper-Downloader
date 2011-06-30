@@ -58,6 +58,7 @@ public class FlickrWebService {
 		case GET_FROB: return getFrob();
 		case GET_PHOTOSET_LIST: return getPhotosetList();
 		case GET_AUTH_TOKEN: return getAuthToken();
+		case GET_COLLECTION_LIST: return getCollectionList();
 		}
 		return null;
 	}
@@ -257,6 +258,65 @@ public class FlickrWebService {
 		return returnValue;
 	}
 	
+	public JSONObject getCollectionList(){
+		
+		String method = "flickr.collections.getTree";
+		
+		ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
+		postParameters.add(new BasicNameValuePair("api_key", KEY));
+		postParameters.add(new BasicNameValuePair("auth_token", TOKEN));
+		postParameters.add(new BasicNameValuePair("format", "json"));
+		postParameters.add(new BasicNameValuePair("method", method));
+		//postParameters.add(new BasicNameValuePair("user_id", "64497976@N06"));
+		
+		StringBuffer buffer = new StringBuffer();
+        buffer.append(SECRET);
+        buffer.append("api_key");
+        buffer.append(KEY);
+        buffer.append("auth_token");
+        buffer.append(TOKEN);
+        buffer.append("format");
+        buffer.append("json");
+        buffer.append("method");
+        buffer.append(method);
+		
+		try {
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			String signature = ByteUtilities.toHexString(md.digest(buffer
+                    .toString().getBytes("UTF-8")));
+			UrlEncodedFormEntity formEntity;
+			postParameters.add(new BasicNameValuePair("api_sig", signature));
+			formEntity = new UrlEncodedFormEntity(postParameters);
+			httpPost.setEntity(formEntity);
+		} catch (NoSuchAlgorithmException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		try {
+			response = httpClient.execute(httpPost);
+			String entityString = EntityUtils.toString(response.getEntity());
+			Log.d(TAG, entityString);
+			returnValue = new JSONObject(entityString.substring(14));
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return returnValue;
+	}
+	
 	public String getPhotoSet(){
 		ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
 		postParameters.add(new BasicNameValuePair("api_key", KEY));
@@ -266,6 +326,6 @@ public class FlickrWebService {
 	}
 	
 	public enum PostMethod{
-		GET_FROB, GET_PHOTOSET_LIST, GET_PHOTOSET, GET_AUTH_TOKEN;
+		GET_FROB, GET_PHOTOSET_LIST, GET_PHOTOSET, GET_COLLECTION_LIST, GET_AUTH_TOKEN;
 	}
 }

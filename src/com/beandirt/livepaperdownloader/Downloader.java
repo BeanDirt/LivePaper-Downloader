@@ -89,7 +89,7 @@ public class Downloader extends Activity {
     }
     
     public void getPhotosets(View v){
-    	Intent intent = new Intent(this, Photosets.class);
+    	Intent intent = new Intent(this, Collections.class);
     	startActivity(intent);
     }
 }

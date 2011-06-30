@@ -4,7 +4,8 @@
   android:layout_width="fill_parent"
   android:layout_height="fill_parent">
   <TextView
-    android:id="@+id/set_name"
+    android:id="@+id/collection_name"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content" />
+    android:layout_height="wrap_content"
+    android:padding="10dip" />
 </LinearLayout>
